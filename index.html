@@ -27,9 +27,44 @@
 </head>
 <body>
 
-<video autoplay muted loop playsinline>
-  <source src="assets/video.mp4" type="video/mp4">
-</video>
+<video id="bgVideo" autoplay muted playsinline></video>
+
+<script>
+  const VIDEO_LIST = [
+    'Turtles.mp4',
+    'Matterhorn.mp4',
+  ];
+
+  let lastVideo = null;
+  const videoEl = document.getElementById('bgVideo');
+  videoEl.loop = false; // we advance manually on "ended" instead
+
+  function pickNextVideo() {
+    if (VIDEO_LIST.length === 0) return null;
+    if (VIDEO_LIST.length === 1) return VIDEO_LIST[0];
+
+    let next;
+    do {
+      next = VIDEO_LIST[Math.floor(Math.random() * VIDEO_LIST.length)];
+    } while (next === lastVideo);
+
+    return next;
+  }
+
+  function playVideo(filename) {
+    lastVideo = filename;
+    videoEl.src = 'assets/' + filename;
+    videoEl.load();
+    videoEl.play().catch(err => console.error('Playback failed:', err));
+  }
+
+  videoEl.addEventListener('ended', () => {
+    const next = pickNextVideo();
+    if (next) playVideo(next);
+  });
+
+  playVideo(pickNextVideo());
+</script>
 
 </body>
 </html>
