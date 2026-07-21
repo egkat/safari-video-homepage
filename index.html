@@ -37,7 +37,7 @@
 
   let lastVideo = null;
   const videoEl = document.getElementById('bgVideo');
-  videoEl.loop = false; // we advance manually on "ended" instead
+  videoEl.loop = false;
 
   function pickNextVideo() {
     if (VIDEO_LIST.length === 0) return null;
@@ -61,6 +61,13 @@
   videoEl.addEventListener('ended', () => {
     const next = pickNextVideo();
     if (next) playVideo(next);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.shiftKey && e.key === 'ArrowRight') {
+      const next = pickNextVideo();
+      if (next) playVideo(next);
+    }
   });
 
   playVideo(pickNextVideo());
