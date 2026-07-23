@@ -11,7 +11,6 @@
     overflow: hidden;
     background: #000;
   }
-
   video {
     position: fixed;
     top: 50%;
@@ -23,11 +22,27 @@
     transform: translate(-50%, -50%);
     object-fit: cover;
   }
+  #clock {
+    position: fixed;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Libertinus Math', serif;
+    font-size: 7rem;
+    color: white;
+    -webkit-text-stroke: 1.5px black;
+    text-shadow:
+      -1px -1px 0 black,
+       1px -1px 0 black,
+      -1px  1px 0 black,
+       1px  1px 0 black;
+  }
 </style>
 </head>
 <body>
 
 <video id="bgVideo" autoplay muted playsinline></video>
+<div id="clock"></div>
 
 <script>
   const VIDEO_LIST = [
@@ -42,12 +57,10 @@
   function pickNextVideo() {
     if (VIDEO_LIST.length === 0) return null;
     if (VIDEO_LIST.length === 1) return VIDEO_LIST[0];
-
     let next;
     do {
       next = VIDEO_LIST[Math.floor(Math.random() * VIDEO_LIST.length)];
     } while (next === lastVideo);
-
     return next;
   }
 
@@ -71,6 +84,17 @@
   });
 
   playVideo(pickNextVideo());
+
+  const clockEl = document.getElementById('clock');
+  function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+  }
+  updateClock();
+  setInterval(updateClock, 1000);
 </script>
 
 </body>
