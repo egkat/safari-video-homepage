@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <style>
   html, body {
     margin: 0;
@@ -27,7 +30,8 @@
     top: 25%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-family: 'Libertinus Math', serif;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
     font-size: 7rem;
     color: white;
     -webkit-text-stroke: 1.5px black;
@@ -37,23 +41,36 @@
       -1px  1px 0 black,
        1px  1px 0 black;
   }
+  #date {
+    position: fixed;
+    top: calc(25% + 5.3rem);
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 600;
+    font-size: 2rem;
+    color: white;
+    -webkit-text-stroke: 0.75px black;
+    text-shadow:
+      -1px -1px 0 black,
+       1px -1px 0 black,
+      -1px  1px 0 black,
+       1px  1px 0 black;
+  }
 </style>
 </head>
 <body>
-
 <video id="bgVideo" autoplay muted playsinline></video>
 <div id="clock"></div>
-
+<div id="date"></div>
 <script>
   const VIDEO_LIST = [
     'Turtles.mp4',
     'Matterhorn.mp4',
   ];
-
   let lastVideo = null;
   const videoEl = document.getElementById('bgVideo');
   videoEl.loop = false;
-
   function pickNextVideo() {
     if (VIDEO_LIST.length === 0) return null;
     if (VIDEO_LIST.length === 1) return VIDEO_LIST[0];
@@ -63,39 +80,40 @@
     } while (next === lastVideo);
     return next;
   }
-
   function playVideo(filename) {
     lastVideo = filename;
     videoEl.src = 'assets/' + filename;
     videoEl.load();
     videoEl.play().catch(err => console.error('Playback failed:', err));
   }
-
   videoEl.addEventListener('ended', () => {
     const next = pickNextVideo();
     if (next) playVideo(next);
   });
-
   document.addEventListener('keydown', (e) => {
     if (e.shiftKey && e.key === 'ArrowRight') {
       const next = pickNextVideo();
       if (next) playVideo(next);
     }
   });
-
   playVideo(pickNextVideo());
-
   const clockEl = document.getElementById('clock');
+  const dateEl = document.getElementById('date');
   function updateClock() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
     const seconds = String(now.getSeconds()).padStart(2, '0');
     clockEl.textContent = `${hours}:${minutes}:${seconds}`;
+    dateEl.textContent = now.toLocaleDateString(undefined, {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
   }
   updateClock();
   setInterval(updateClock, 1000);
 </script>
-
 </body>
 </html>
